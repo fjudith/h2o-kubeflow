@@ -10,7 +10,7 @@
 // @optionalParam replicas number 1 starting number of pods
 
 local k = import 'k.libsonnet';
-local h2o3cluster = import 'kubeflow/h2o3-cluster/h2o3-static.libsonnet';
+local h2o3static = import 'kubeflow/h2o3-static/h2o3-static.libsonnet';
 
 local name = import 'param://name';
 local namespace = import 'param://namespace';
@@ -21,6 +21,6 @@ local modelServerImage = import 'param://model_server_image';
 
 
 std.prune(k.core.v1.list.new([
-  h2o3cluster.parts.deployment.modelServer(name, namespace, memory, cpu, replicas, modelServerImage),
-  h2o3cluster.parts.deployment.modelService(name, namespace),
+  h2o3static.parts.deployment.modelServer(name, namespace, memory, cpu, replicas, modelServerImage),
+  h2o3static.parts.deployment.modelService(name, namespace),
 ]))
