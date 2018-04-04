@@ -42,7 +42,7 @@ cd <my_ksonnet_app>
 # add ksonnet registry to app containing all the kubeflow manifests as maintained by Google Kubeflow team
 ks registry add kubeflow https://github.com/kubeflow/kubeflow/tree/master/kubeflow
 # add ksonnet registry to app containing all the h2o component manifests
-ks registry add h2o-kubeflow <this_github_repo/kubeflow>
+ks registry add h2o-kubeflow <this_github_repo/h2o-kubeflow>
 ks pkg install kubeflow/core
 ks pkg install kubeflow/tf-serving
 ks pkg install kubeflow/tf-job
