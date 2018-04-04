@@ -7,7 +7,7 @@
 // @optionalParam namespace string default namespace
 
 local k = import 'k.libsonnet';
-local driverlessai = import 'kubeflow/driverless/driverless.libsonnet';
+local driverlessai = import 'h2o-kubeflow/driverless/driverless.libsonnet';
 
 local name = import 'param://name';
 local namespace = import 'param://namespace';
