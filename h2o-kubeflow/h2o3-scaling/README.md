@@ -2,6 +2,16 @@
 
 This will deploy automatically scaling H2O-3 Cluster. This is currently in development and is not 100% stable.
 
+## Requirements:
+
+for the horizontal pod autoscaler to work, you will need to deploy this to your Kubernetes cluster first:
+https://github.com/kubernetes-incubator/metrics-server
+
+1. Clone the repo above to your local machine
+2. Once kubectl is properly configured, run `kubectl create -f deploy/1.8+/` from the top of the cloned repo
+
+this will launch the metrics api server that the horizontal pod autoscaler calls for memory/cpu consumption
+
 ## NEED TO KNOW
   1. H2O-3 locks its cluster once it starts running jobs. If the memory consumption threshold, the horizontal pod autoscaler will spawn a new pod, but the pod will not be able to attach to the cluster. The cluster will need to be shutdown and re-initialized.
     - Python restart commands `h2o.cluster().shutdown()` and `h2o.init()`
