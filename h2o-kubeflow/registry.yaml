@@ -4,9 +4,6 @@ libraries:
   driverless:
     version: master
     path: driverless
-  h2o3-cluster:
-    version: master
-    path: h2o3-cluster
   h2o3-static:
     version: master
     path: h2o3-static
