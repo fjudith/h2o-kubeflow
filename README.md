@@ -39,12 +39,14 @@ You will also need [ksonnet](https://ksonnet.io) and [kubectl](https://kubernete
 ks init <my_ksonnet_app>
 cd <my_ksonnet_app>
 
-# add ksonnet registry to app containing all the component manifests
-ks registry add kubeflow <this_github_repo/kubeflow>
+# add ksonnet registry to app containing all the kubeflow manifests as maintained by Google Kubeflow team
+ks registry add kubeflow https://github.com/kubeflow/kubeflow/tree/master/kubeflow
+# add ksonnet registry to app containing all the h2o component manifests
+ks registry add h2o-kubeflow <this_github_repo/kubeflow>
 ks pkg install kubeflow/core
 ks pkg install kubeflow/tf-serving
 ks pkg install kubeflow/tf-job
-ks pkg install kubeflow/h2o3
+ks pkg install h2o-kubeflow/h2o3-static
 
 # deploy core Kubeflow componentes
 kubectl create namespace kubeflow
@@ -60,12 +62,12 @@ ks apply <my_environment_name> -c kubeflow-core
 - Deploy H2O 3 by running the following commands. <location_of_docker_image> is probably a Google Container Repository with the format `gcr.io/<my_project>/<h2o3_image>:version`:
 
 ```bash
-ks prototype use io.ksonnet.pkg.h2o3 h2o3 \
---name h2o3 \
+ks prototype use io.ksonnet.pkg.h2o3-static h2o3-static \
+--name h2o3-static \
 --namespace kubeflow \
 --model_server_image <location_of_docker_image>
 
-ks apply <my_environment_name> -c h2o3
+ks apply <my_environment_name> -c h2o3-static
 ```
 - run `kubectl get svc -n kubeflow` to find the External IP address.
 - Open a jupyter notebook on a local computer that has H2O installed locally.
