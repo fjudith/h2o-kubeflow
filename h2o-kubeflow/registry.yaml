@@ -10,3 +10,6 @@ libraries:
   h2o3-static:
     version: master
     path: h2o3-static
+  h2o3-scaling:
+    verion: master
+    path: h2o3-scaling
