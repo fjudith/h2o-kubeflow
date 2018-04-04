@@ -20,9 +20,9 @@ Dockerfiles:
   - start.sh
 
 kubeflow:
-- directories [argo, core, driverless, h2o3, seldon, tf-job, tf-serving] contain the manifests required to deploy their corresponding applications.
-  - core -- manifests required for deploying core kubeflow components
-  - h2o3 -- manifests required for deploying H2O 3 components
+- directories [driverless, h2o3-static, h2o3-scaling] contain the manifests required to deploy their corresponding applications. Please note, all Kubeflow components are available in the Kubeflow repository [here](https://github.com/kubeflow/kubeflow)
+  - h2o3-static -- contains components for deploying a single or multinode H2O-3 cluster using Kubeflow. If more nodes are required, you will need to manually change the parameters and relaunch the cluster.
+  - h2o3-scaling -- contains components for deploying an H2O-3 cluster that will automatically scale with memory demands. Read the README within the component folder for additional information and requirements.  
 - registry.yaml -- manifest file that declares ksonnet packages available within the directory.
 
 
@@ -60,11 +60,17 @@ ks apply <my_environment_name> -c kubeflow-core
 ```
 
 - Deploy H2O 3 by running the following commands. <location_of_docker_image> is probably a Google Container Repository with the format `gcr.io/<my_project>/<h2o3_image>:version`:
+  - NOTE:
+    - required flags `--name` [Name of Deployment] and `--model_server_image` [Docker image to use]
+    - optional flags `--memory` [amount of memory requested by each node], `--cpu` [number of cpus requested by each node], `--replicas` [number of nodes to spawn]
 
 ```bash
 ks prototype use io.ksonnet.pkg.h2o3-static h2o3-static \
 --name h2o3-static \
 --namespace kubeflow \
+--memory 1 \
+--cpu 1 \
+--replicas 2 \
 --model_server_image <location_of_docker_image>
 
 ks apply <my_environment_name> -c h2o3-static
