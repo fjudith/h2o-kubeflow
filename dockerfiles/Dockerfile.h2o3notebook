@@ -163,8 +163,7 @@ RUN pip install --quiet --no-cache-dir tf-nightly
 
 # Install Oracle Java 8
 RUN \
-  apt-get update && apt-get install -y wget unzip python-pip python-sklearn python-pandas python-numpy python-matplotlib 
-software-properties-common python-software-properties && \
+  apt-get update && apt-get install -y wget unzip python-pip python-sklearn python-pandas python-numpy python-matplotlib software-properties-common python-software-properties && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update -q && \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -195,12 +194,10 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 
-RUN curl -L -o bazel.sh https://github.com/bazelbuild/bazel/releases/download/0.8.0/bazel-0.8.0-installer-linux-x86_64.sh && chmod a+x 
-./bazel.sh && ./bazel.sh && rm ./bazel.sh
+RUN curl -L -o bazel.sh https://github.com/bazelbuild/bazel/releases/download/0.8.0/bazel-0.8.0-installer-linux-x86_64.sh && chmod a+x ./bazel.sh && ./bazel.sh && rm ./bazel.sh
 SHELL ["/bin/bash", "-c"]
 
-RUN git clone https://github.com/tensorflow/models.git /home/$NB_USER/tensorflow-models && git clone 
-https://github.com/tensorflow/benchmarks.git /home/$NB_USER/tensorflow-benchmarks
+RUN git clone https://github.com/tensorflow/models.git /home/$NB_USER/tensorflow-models && git clone https://github.com/tensorflow/benchmarks.git /home/$NB_USER/tensorflow-benchmarks
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN pip install jupyter-tensorboard
