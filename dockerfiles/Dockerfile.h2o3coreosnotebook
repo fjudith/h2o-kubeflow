@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     curl \
     g++ \
     jed \
-    libav-tools \
+    ffmpeg \
     libcupti-dev \
     lsb-release \
     openssh-client \
