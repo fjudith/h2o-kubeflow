@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 
 # Install ksonnet
 ENV KSONNET_VERSION 0.12.0
-RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v{KSONNET_VERSION}/ks_{KSONNET_VERSION}_linux_amd64.tar.gz && \
+RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v${KSONNET_VERSION}/ks_${KSONNET_VERSION}_linux_amd64.tar.gz && \
     tar -zvxf ks_${KSONNET_VERSION}_linux_amd64.tar.gz && \
     mv ks_${KSONNET_VERSION}_linux_amd64/ks /usr/local/bin/ks && \
     rm -rf ks_${KSONNET_VERSION}_linux_amd64* && \
