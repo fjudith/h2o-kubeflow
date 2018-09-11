@@ -1,0 +1,67 @@
+# Istio Ingress Gateway does not support headless services (i.e. "ClusterIP: none")
+# It is then required to create a new service that let's Kubernetes define a virtual ip in the cluster 
+apiVersion: v1
+kind: Service
+metadata:
+  name: tf-hub
+  namespace: kubeflow
+  labels:
+    app: tf-hub
+    app.kubernetes.io/deploy-manager: ksonnet
+    ksonnet.io/component: kubeflow-core
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+  - name: hub
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: tf-hub
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kubeflow
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - 'kubeflow.example.com'
+  http:
+  - match:
+    - uri:
+        prefix: /hub
+    - uri:
+        prefix: /user
+    route:
+    - destination:
+        host: tf-hub.kubeflow.svc.cluster.local
+        port:
+          number: 8000
+  - match:
+    - uri:
+        prefix: /tfjobs
+    route:
+    - destination:
+        host: tf-job-dashboard.kubeflow.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+        prefix: /k8s
+    route:
+    - destination:
+        host: kubernetes-dashboard.kube-system.svc.cluster.local
+        port:
+          number: 443
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: centraldashboard.kubeflow.svc.cluster.local
+        port:
+          number: 80
