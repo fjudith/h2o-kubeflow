@@ -31,10 +31,11 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install ksonnet
-RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v0.12.0/ks_0.12.0_linux_amd64.tar.gz && \
-    tar -zvxf ks_0.9.2_linux_amd64.tar.gz && \
-    mv ks_0.9.2_linux_amd64/ks /usr/local/bin/ks && \
-    rm -rf ks_0.9.2_linux_amd64* && \
+ENV KSONNET_VERSION 0.12.0
+RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v{KSONNET_VERSION}/ks_{KSONNET_VERSION}_linux_amd64.tar.gz && \
+    tar -zvxf ks_${KSONNET_VERSION}_linux_amd64.tar.gz && \
+    mv ks_${KSONNET_VERSION}_linux_amd64/ks /usr/local/bin/ks && \
+    rm -rf ks_${KSONNET_VERSION}_linux_amd64* && \
     chmod +x /usr/local/bin/ks
 
 # Install CUDA Profile Tools and other python packages
@@ -88,8 +89,9 @@ RUN conda install --quiet --yes \
     conda clean -tipsy
 
 # Install graphviz package
-RUN apt-get update && apt-get install -yq --no-install-recommends graphviz \
-    && apt-get clean && \
+RUN apt-get update && apt-get install -yq --no-install-recommends graphviz && \
+    apt-get autoremove -y --purge && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Oracle Java 8
@@ -100,6 +102,7 @@ RUN \
   echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java8-installer && \
+  apt-get autoremove -y --purge && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
