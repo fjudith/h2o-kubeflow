@@ -38,9 +38,6 @@ RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v${KSONNET
     rm -rf ks_${KSONNET_VERSION}_linux_amd64* && \
     chmod +x /usr/local/bin/ks
 
-# Upgrade pip
-RUN pip install --upgrade pip
-
 # Install CUDA Profile Tools and other python packages
 RUN pip --no-cache-dir install \
     Pillow \
