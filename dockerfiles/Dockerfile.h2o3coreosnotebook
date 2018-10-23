@@ -31,12 +31,14 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install ksonnet
-ENV KSONNET_VERSION 0.12.0
+ENV KSONNET_VERSION 0.13.0
 RUN wget --quiet https://github.com/ksonnet/ksonnet/releases/download/v${KSONNET_VERSION}/ks_${KSONNET_VERSION}_linux_amd64.tar.gz && \
     tar -zvxf ks_${KSONNET_VERSION}_linux_amd64.tar.gz && \
     mv ks_${KSONNET_VERSION}_linux_amd64/ks /usr/local/bin/ks && \
     rm -rf ks_${KSONNET_VERSION}_linux_amd64* && \
     chmod +x /usr/local/bin/ks
+
+RUN pip install --no-cache-dir --upgrade pip
 
 # Install CUDA Profile Tools and other python packages
 RUN pip --no-cache-dir install \
