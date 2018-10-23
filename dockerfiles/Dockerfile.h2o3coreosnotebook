@@ -57,6 +57,7 @@ RUN pip --no-cache-dir install \
     pydot \
     pydot-ng \
     graphviz \
+    ipyparallel \
     && \
     python -m ipykernel.kernelspec
 
