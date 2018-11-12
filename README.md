@@ -1,4 +1,4 @@
-[![Docker Repository on Quay](https://quay.io/repository/fjudith/h2o-kubeflow-notebook/status "Docker Repository on Quay")](https://quay.io/repository/fjudith/h2o-kubeflow-notebook)
+h2o3: [![Docker Repository on Quay](https://quay.io/repository/fjudith/h2o3/status "Docker Repository on Quay")](https://quay.io/repository/fjudith/h2o3) Notebook: [![Docker Repository on Quay](https://quay.io/repository/fjudith/h2o-kubeflow-notebook/status "Docker Repository on Quay")](https://quay.io/repository/fjudith/h2o-kubeflow-notebook)
 
 # H2O + Kubeflow Integration
 
