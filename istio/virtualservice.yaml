@@ -33,35 +33,9 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /hub
-    - uri:
-        prefix: /user
-    route:
-    - destination:
-        host: tf-hub.kubeflow.svc.cluster.local
-        port:
-          number: 8000
-  - match:
-    - uri:
-        prefix: /tfjobs
-    route:
-    - destination:
-        host: tf-job-dashboard.kubeflow.svc.cluster.local
-        port:
-          number: 80
-  - match:
-    - uri:
-        prefix: /k8s
-    route:
-    - destination:
-        host: kubernetes-dashboard.kube-system.svc.cluster.local
-        port:
-          number: 443
-  - match:
-    - uri:
         prefix: /
     route:
     - destination:
-        host: centraldashboard.kubeflow.svc.cluster.local
+        host: ambassador.kubeflow.svc.cluster.local
         port:
           number: 80
