@@ -33,9 +33,37 @@ spec:
   http:
   - match:
     - uri:
+        prefix: /katib
+    route:
+    - destination:
+        host: modeldb-frontend.kubeflow.svc.cluster.local
+        port:
+          number: 3000
+  - match:
+    - uri:
         prefix: /
     route:
     - destination:
         host: ambassador.kubeflow.svc.cluster.local
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argo
+  namespace: default
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - 'argo.example.com'
+  http:
+  - match:
+    - uri:
+        prefix: /argo
+    route:
+    - destination:
+        host: argo-ui.kubeflow.svc.cluster.local
         port:
           number: 80
