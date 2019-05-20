@@ -186,7 +186,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     scipy \
     kubernetes \
     grpcio \
-    # ktext
+    ktext \
     annoy \
     nltk \
     pydot \
