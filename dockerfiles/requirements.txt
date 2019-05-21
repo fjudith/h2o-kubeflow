@@ -18,3 +18,22 @@ matplotlib
 google-cloud
 pandas-gbq
 google-api-python-client
+
+# H2O3 related packages
+colorama
+cython
+future
+grip
+numpydoc
+patsy
+recommonmark
+requests
+scikit-learn
+seaborn
+slam
+sphinx
+sphinx_rtd_theme
+sphinxcontrib-osexample
+statsmodels
+tabulate
+twine

@@ -162,26 +162,28 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# Install H2O.3
 RUN pip --no-cache-dir install \
-    colorama \
-    cython \
-    future \
-    grip \
-    numpydoc \
-    mysqlclient \
-    patsy \
-    recommonmark \
-    requests \
-    scikit-learn \
-    seaborn \
-    slam \
-    sphinx \
-    sphinx_rtd_theme \
-    sphinxcontrib-osexample \
-    statsmodels \
-    tabulate \
-    twine
+    mysqlclient
+# Install H2O.3
+# RUN pip --no-cache-dir install \
+#     colorama \
+#     cython \
+#     future \
+#     grip \
+#     numpydoc \
+#     mysqlclient \
+#     patsy \
+#     recommonmark \
+#     requests \
+#     scikit-learn \
+#     seaborn \
+#     slam \
+#     sphinx \
+#     sphinx_rtd_theme \
+#     sphinxcontrib-osexample \
+#     statsmodels \
+#     tabulate \
+#     twine
 
 RUN pip --no-cache-dir --trusted-host h2o-release.s3.amazonaws.com install -f \
         http://h2o-release.s3.amazonaws.com/h2o/latest_stable_Py.html h2o
