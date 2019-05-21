@@ -13,9 +13,6 @@ LABEL maintainer="h2o.ai"
 # update/dist-upgrade
 # clear the caches
 
-ENV MEMORY 1
-ENV DEP_NAME h2o3
-
 RUN \
   echo 'DPkg::Post-Invoke {"/bin/rm -f /var/cache/apt/archives/*.deb || true";};' | tee /etc/apt/apt.conf.d/no-cache && \
   echo "deb http://mirror.math.princeton.edu/pub/ubuntu bionic main universe" >> /etc/apt/sources.list && \
@@ -96,7 +93,6 @@ EXPOSE 54323
 EXPOSE 54324
 
 # Define default command
-
 
 CMD ["/bin/bash"]
 
