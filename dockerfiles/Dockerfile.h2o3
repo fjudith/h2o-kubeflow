@@ -98,7 +98,7 @@ EXPOSE 54324
 # Define default command
 
 
-CMD ["/bin/bash","-c","java","-Xmx$(MEMORY)g","-jar","/opt/h2o.jar"]
+CMD ["/bin/bash"]
 
 # Kubernetes Only
 # ENTRYPOINT ["/opt/docker-startup.sh"]
