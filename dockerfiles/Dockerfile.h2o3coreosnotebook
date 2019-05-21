@@ -37,38 +37,27 @@ ENV PIPELINE_SDK_PACKAGE $PIPELINE_SDK_PACKAGE
 # Use bash instead of sh
 SHELL ["/bin/bash", "-c"]
 
-# Install all OS dependencies for notebook server that starts but lacks all
-# features (e.g., download as all possible file formats)
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update && apt-get install -yq --no-install-recommends \
-    apt-transport-https \
-    build-essential \
-    bzip2 \
-    ca-certificates \
-    curl \
-    g++ \
-    git \
-    gnupg \
-    graphviz \
-    jed \
-    ffmpeg \
-    libcupti-dev \
-    locales \
-    lsb-release \
-    openssh-client \
-    pkg-config \
-    python \
-    python-dev \
-    sudo \
-    unzip \
-    vim \
-    wget \
-    zlib1g-dev \
-    zip && \
-    apt-get autoremove -y --purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+  apt-transport-https \
+  build-essential \
+  bzip2 \
+  ca-certificates \
+  curl \
+  g++ \
+  git \
+  gnupg \
+  graphviz \
+  ffmpeg \
+  locales \
+  lsb-release \
+  openssh-client \
+  sudo \
+  unzip \
+  vim \
+  wget \
+  zip \
+  && apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 ENV DOCKER_CREDENTIAL_GCR_VERSION=1.4.3
 RUN curl -LO https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${DOCKER_CREDENTIAL_GCR_VERSION}/docker-credential-gcr_linux_amd64-${DOCKER_CREDENTIAL_GCR_VERSION}.tar.gz && \
@@ -95,13 +84,7 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
     echo "deb https://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update && \
-    apt-get install -y google-cloud-sdk kubectl && \
-    apt-get autoremove -y --purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    gcloud config set core/disable_usage_reporting true && \
-    gcloud config set component_manager/disable_update_check true && \
-    gcloud config set metrics/environment github_docker_image
+    apt-get install -y google-cloud-sdk kubectl
 
 # Install Tini - used as entrypoint for container
 RUN cd /tmp && \
@@ -169,64 +152,6 @@ RUN curl -L https://github.com/ksonnet/ksonnet/releases/download/v${KSONNET_VERS
     rm -rf ks_${KSONNET_VERSION}_linux_amd64 && \
     chmod +x /usr/local/bin/ks
 
-# Install CUDA Profile Tools and other python packages
-# h5py, ipykernet, matplotlib and sklearn are already installed by install.sh and requirements.txt
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    gcc-6 g++-6 && \
-    apt-get autoremove -y --purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /usr/local/cuda/bin/ && \
-    ln -s $(which gcc-6) /usr/local/cuda/bin/gcc && \
-    ln -s $(which g++-6) /usr/local/cuda/bin/g++ && \
-    pip -v --no-cache-dir install \
-    Pillow \
-    numpy \
-    scipy \
-    kubernetes \
-    grpcio \
-    ktext \
-    annoy \
-    nltk \
-    pydot \
-    pydot-ng \
-    graphviz \
-    ipyparallel && \
-    python -m ipykernel.kernelspec
-
-# Install Python 3 packages
-# Remove pyqt and qt pulled in for matplotlib since we're only ever going to
-# use notebook-friendly backends in these images
-# ipywidgets, pandas, matplotlib and h5py are already installed by install.sh and requirements.txt
-RUN conda install -vv --yes \
-    'nomkl' \
-    'numexpr=2.6*' \
-    'scipy=0.19*' \
-    'seaborn=0.7*' \
-    'scikit-learn=0.18*' \
-    'scikit-image=0.12*' \
-    'sympy=1.0*' \
-    'cython=0.25*' \
-    'patsy=0.4*' \
-    'statsmodels=0.8*' \
-    'cloudpickle=0.2*' \
-    'dill=0.2*' \
-    'numba=0.31*' \
-    'bokeh=0.12*' \
-    'sqlalchemy=1.1*' \
-    'hdf5=1.8.17' \
-    'vincent=0.4.*' \
-    'beautifulsoup4=4.5.*' \
-    'xlrd'  && \
-    conda remove --quiet --yes --force qt pyqt && \
-    conda clean -tipsy
-
-# Install graphviz package
-RUN apt-get update && apt-get install -yq --no-install-recommends graphviz && \
-    apt-get autoremove -y --purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
 # Install Oracle Java 8
 RUN \
   apt-get update && apt-get install -y wget unzip python-pip python-sklearn python-pandas python-numpy python-matplotlib software-properties-common && \
@@ -243,39 +168,10 @@ RUN pip --no-cache-dir install \
         scikit-learn \
         colorama \
         future
+
 RUN pip --no-cache-dir --trusted-host h2o-release.s3.amazonaws.com install -f \
         http://h2o-release.s3.amazonaws.com/h2o/latest_stable_Py.html h2o
 
-# Activate ipywidgets extension in the environment that runs the notebook server
-RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
-
-ENV BAZEL_VERSION=0.25.2
-RUN curl -L -o bazel.sh https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh && chmod a+x ./bazel.sh && ./bazel.sh && rm ./bazel.sh
-SHELL ["/bin/bash", "-c"]
-
-RUN git clone https://github.com/tensorflow/models.git /home/$NB_USER/tensorflow-models && git clone https://github.com/tensorflow/benchmarks.git /home/$NB_USER/tensorflow-benchmarks
-# Import matplotlib the first time to build the font cache.
-ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
-RUN pip install jupyter-tensorboard
-
-# Create a conda environment for Python 2. We want to include as many of the
-# packages from our root environment as we reasonably can, so we explicitly
-# list that environment, then include everything unless it is Conda (which
-# can only be in the root environment), Jupyterhub (which requires Python 3),
-# or Python itself. We also want to include the pip packages, but we cannot
-# install those via conda, so we list them, drop any conda packages, and
-# then install them via pip. We do this on a best-effort basis, so if any
-# packages from the Python 3 environment cannot be installed with Python 2,
-# then we just skip them.
-# RUN conda_packages=$(conda list -e | cut -d '=' -f 1 | grep -v '#' | sort) && \
-#     pip_packages=$(pip --no-cache-dir list --format=freeze | cut -d '=' -f 1 | grep -v '#' | sort) && \
-#     pip_only_packages=$(comm -23 <(echo "${pip_packages}") <(echo "${conda_packages}")) && \
-#     conda create -n ipykernel_py2 python=2 --file <(echo "${conda_packages}" | grep -v conda | grep -v python | grep -v jupyterhub) && \
-#     source activate ipykernel_py2 && \
-#     python -m ipykernel install --user && \
-#     echo "${pip_only_packages}" | xargs -n 1 -I "{}" /bin/bash -c 'pip install --no-cache-dir {} || true' && \
-#     pip install --no-cache-dir tensorflow-transform && \
-#     source deactivate
 
 ##################################################
 
@@ -297,4 +193,3 @@ EXPOSE 8888
 USER jovyan
 ENTRYPOINT ["tini", "--"]
 CMD ["sh","-c", "jupyter notebook --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
-
